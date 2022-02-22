@@ -1,5 +1,5 @@
 const container = document.querySelector('.container');
-const result = document.querySelector('#resultado');
+const resultContent = document.querySelector('#resultado');
 const form = document.querySelector('#formulario');
 
 window.addEventListener('load', () => {
@@ -52,10 +52,56 @@ function requestAPI(city, country) {
     fetch(url)
         .then( response => response.json() )
         .then( data => {
-            console.log(data);
+
+            cleanHTML();
             if (data.cod === '404') {
-                showAlert(data.message);    
+                showAlert(data.message);
+                return;
             }
 
-        } );
+            showWeather(data);
+        });
+}
+
+function showWeather(data) {
+    
+    const { name, main: { temp, temp_max, temp_min } } = data;
+
+    const celsius = kelvinToCelsius(temp);
+    const temp_celsius_max = kelvinToCelsius(temp_max);
+    const temp_celsius_min = kelvinToCelsius(temp_min);
+
+    const nameCity = document.createElement('p');
+    nameCity.textContent = `Clima en ${name}`;
+    nameCity.classList.add('font-bold', 'text-2xl');
+
+    const currentCelsius = document.createElement('p');
+    currentCelsius.innerHTML = `${celsius} &#8451;`;
+    currentCelsius.classList.add('font-bold', 'text-6xl');
+
+    const maxCelsius = document.createElement('p');
+    maxCelsius.innerHTML = `Max: ${temp_celsius_max} &#8451;`;
+    maxCelsius.classList.add('text-xl');
+
+    const minCelsius = document.createElement('p');
+    minCelsius.innerHTML = `Min: ${temp_celsius_min} &#8451;`;
+    minCelsius.classList.add('text-xl');
+
+    const resulDiv = document.createElement('div');
+    resulDiv.classList.add('text-center', 'text-white');
+    resulDiv.appendChild(nameCity);
+    resulDiv.appendChild(currentCelsius);
+    resulDiv.appendChild(maxCelsius);
+    resulDiv.appendChild(minCelsius);
+
+    resultContent.appendChild(resulDiv);
+    
+}
+
+const kelvinToCelsius = temp => parseInt(temp - 273.15);
+
+function cleanHTML() {
+    while (resultContent.firstChild) {
+        resultContent.removeChild(resultContent.firstChild);
+    }
 }
