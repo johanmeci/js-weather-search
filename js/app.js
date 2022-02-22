@@ -65,33 +65,46 @@ function requestAPI(city, country) {
 }
 
 function showWeather(data) {
+
+    console.log(data);
     
-    const { name, main: { temp, temp_max, temp_min } } = data;
+    const { name, main: { temp, temp_max, temp_min }, weather, sys: { country } } = data;
 
     const celsius = kelvinToCelsius(temp);
     const temp_celsius_max = kelvinToCelsius(temp_max);
     const temp_celsius_min = kelvinToCelsius(temp_min);
 
     const nameCity = document.createElement('p');
-    nameCity.textContent = `Clima en ${name}`;
-    nameCity.classList.add('font-bold', 'text-2xl');
+    nameCity.innerHTML = `${name}, ${country}`;
+    nameCity.classList.add('font-bold', 'text-2xl', 'txt-city');
 
+    const descriptionWeather = document.createElement('p');
+    descriptionWeather.innerHTML = `<span>${weather[0].description}</span>`;
+    descriptionWeather.classList.add('font-bold', 'text-2xl', 'txt-description');
+
+    const iconWeather = document.createElement('div');
+    iconWeather.classList.add('icon-weather');
+    iconWeather.style.backgroundImage = `url(http://openweathermap.org/img/wn/${weather[0].icon}@2x.png)`;
+
+    descriptionWeather.prepend(iconWeather);
+    
     const currentCelsius = document.createElement('p');
-    currentCelsius.innerHTML = `${celsius} &#8451;`;
-    currentCelsius.classList.add('font-bold', 'text-6xl');
+    currentCelsius.innerHTML = `${celsius}°`;
+    currentCelsius.classList.add('text-6xl', 'txt-temp');
 
     const maxCelsius = document.createElement('p');
-    maxCelsius.innerHTML = `Max: ${temp_celsius_max} &#8451;`;
-    maxCelsius.classList.add('text-xl');
+    maxCelsius.innerHTML = `🔼 ${temp_celsius_max}°`;
+    maxCelsius.classList.add('txt-max');
 
     const minCelsius = document.createElement('p');
-    minCelsius.innerHTML = `Min: ${temp_celsius_min} &#8451;`;
-    minCelsius.classList.add('text-xl');
+    minCelsius.innerHTML = `🔽 ${temp_celsius_min}°`;
+    minCelsius.classList.add('txt-min');
 
     const resulDiv = document.createElement('div');
-    resulDiv.classList.add('text-center', 'text-white');
+    resulDiv.classList.add('text-left', 'text-white');
     resulDiv.appendChild(nameCity);
     resulDiv.appendChild(currentCelsius);
+    resulDiv.appendChild(descriptionWeather);
     resulDiv.appendChild(maxCelsius);
     resulDiv.appendChild(minCelsius);
 
