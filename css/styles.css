@@ -5,6 +5,9 @@ html {
     
 }
 
+.msg-alert span {
+  text-transform: capitalize;
+}
 
 .sk-fading-circle {
     margin: 100px auto;
